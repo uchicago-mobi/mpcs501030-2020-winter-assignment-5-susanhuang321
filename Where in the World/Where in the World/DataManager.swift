@@ -18,7 +18,6 @@ public class DataManager {
     
     
 
-  //This prevents others from using the default '()' initializer
     fileprivate init() {}
 
     
