@@ -34,6 +34,7 @@ class FavoritesViewController: UIViewController, UITableViewDelegate, UITableVie
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         delegate?.favoritePlace(name: DataManager.sharedInstance.getFavorites()[indexPath.row])
+        
         dismiss(animated: true, completion: nil)
     }
     

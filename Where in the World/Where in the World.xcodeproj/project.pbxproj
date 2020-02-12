@@ -13,6 +13,9 @@
 		080E373423F31475002000AF /* Place.swift in Sources */ = {isa = PBXBuildFile; fileRef = 080E373323F31474002000AF /* Place.swift */; };
 		080E373623F31498002000AF /* PlaceMarkerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 080E373523F31498002000AF /* PlaceMarkerView.swift */; };
 		084B862B23F11412008C7495 /* FavoritesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 084B862A23F11412008C7495 /* FavoritesViewController.swift */; };
+		08B786E823F4AF6600831DD6 /* LocationNotification.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08B786E723F4AF6600831DD6 /* LocationNotification.swift */; };
+		08B786EA23F4B08500831DD6 /* LocationNotificationInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08B786E923F4B08500831DD6 /* LocationNotificationInfo.swift */; };
+		08B786EC23F4B0BE00831DD6 /* LocationNotificationScheduler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08B786EB23F4B0BE00831DD6 /* LocationNotificationScheduler.swift */; };
 		08E3693B23EF5C09007F3817 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08E3693A23EF5C09007F3817 /* AppDelegate.swift */; };
 		08E3693D23EF5C09007F3817 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08E3693C23EF5C09007F3817 /* SceneDelegate.swift */; };
 		08E3693F23EF5C09007F3817 /* MapViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08E3693E23EF5C09007F3817 /* MapViewController.swift */; };
@@ -28,6 +31,9 @@
 		080E373323F31474002000AF /* Place.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Place.swift; sourceTree = "<group>"; };
 		080E373523F31498002000AF /* PlaceMarkerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlaceMarkerView.swift; sourceTree = "<group>"; };
 		084B862A23F11412008C7495 /* FavoritesViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavoritesViewController.swift; sourceTree = "<group>"; };
+		08B786E723F4AF6600831DD6 /* LocationNotification.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationNotification.swift; sourceTree = "<group>"; };
+		08B786E923F4B08500831DD6 /* LocationNotificationInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationNotificationInfo.swift; sourceTree = "<group>"; };
+		08B786EB23F4B0BE00831DD6 /* LocationNotificationScheduler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationNotificationScheduler.swift; sourceTree = "<group>"; };
 		08E3693723EF5C09007F3817 /* Where in the World.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Where in the World.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		08E3693A23EF5C09007F3817 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		08E3693C23EF5C09007F3817 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -71,6 +77,9 @@
 				08E3693A23EF5C09007F3817 /* AppDelegate.swift */,
 				08E3693C23EF5C09007F3817 /* SceneDelegate.swift */,
 				08E3693E23EF5C09007F3817 /* MapViewController.swift */,
+				08B786E723F4AF6600831DD6 /* LocationNotification.swift */,
+				08B786E923F4B08500831DD6 /* LocationNotificationInfo.swift */,
+				08B786EB23F4B0BE00831DD6 /* LocationNotificationScheduler.swift */,
 				080E373123F26576002000AF /* Data.plist */,
 				080E372D23F12D17002000AF /* DataManager.swift */,
 				080E373523F31498002000AF /* PlaceMarkerView.swift */,
@@ -157,10 +166,13 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				08B786EC23F4B0BE00831DD6 /* LocationNotificationScheduler.swift in Sources */,
+				08B786E823F4AF6600831DD6 /* LocationNotification.swift in Sources */,
 				08E3693F23EF5C09007F3817 /* MapViewController.swift in Sources */,
 				080E373023F23444002000AF /* FavoritesTableViewCell.swift in Sources */,
 				080E373623F31498002000AF /* PlaceMarkerView.swift in Sources */,
 				080E372E23F12D17002000AF /* DataManager.swift in Sources */,
+				08B786EA23F4B08500831DD6 /* LocationNotificationInfo.swift in Sources */,
 				08E3693B23EF5C09007F3817 /* AppDelegate.swift in Sources */,
 				084B862B23F11412008C7495 /* FavoritesViewController.swift in Sources */,
 				080E373423F31475002000AF /* Place.swift in Sources */,

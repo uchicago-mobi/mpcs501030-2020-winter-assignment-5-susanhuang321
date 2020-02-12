@@ -13,7 +13,6 @@ import Foundation
 
 public class DataManager {
   
-  // MARK: - Singleton Stuff
     public static let sharedInstance = DataManager()
     let defaults = UserDefaults.standard
     
@@ -22,12 +21,6 @@ public class DataManager {
   //This prevents others from using the default '()' initializer
     fileprivate init() {}
 
-  // Your code (these are just example functions, implement what you need)
-    /*func loadAnnotationFromPlist() {
-        
-    }*/
-    
-    
     
     func saveToFavorites(_ currentAnnotation: String) {
         var arr = defaults.array(forKey: "favorites") as? [String] ?? [String]()

@@ -8,10 +8,17 @@
  https://iosdevcenters.blogspot.com/2017/11/what-is-protocol-how-to-pop-data-using.html
  https://stackoverflow.com/questions/30540123/displaying-an-array-of-dictionaries-from-a-plist-to-a-tableview-swift-arraydi
  https://www.hackingwithswift.com/example-code/location/how-to-add-annotations-to-mkmapview-using-mkpointannotation-and-mkpinannotationview
+ https://iosdevcenters.blogspot.com/2017/11/what-is-protocol-how-to-pop-data-using.html
+ https://www.hackingwithswift.com/read/22/2/requesting-location-core-location
+ https://medium.com/@jonathan2457/location-triggered-notifications-on-ios-24033919fb9a
  */
 
 import UIKit
 import MapKit
+
+import CoreLocation
+import UserNotifications
+
 
 struct Root: Codable{
     var places: [Places]?
@@ -21,9 +28,10 @@ struct Places: Codable {
     var description: String
     var lat: Double
     var long: Double
+   
 }
 
-class MapViewController: UIViewController, MKMapViewDelegate{
+class MapViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDelegate{
     
     @IBOutlet var mapView: MKMapView!
     
@@ -46,8 +54,17 @@ class MapViewController: UIViewController, MKMapViewDelegate{
     
     var annotationSelected: Bool = false
     
+    var locationManager: CLLocationManager?
+
+    private let locationNotification = LocationNotification()
     override func viewDidLoad() {
         super.viewDidLoad()
+        locationNotification.delegate = self
+        locationManager = CLLocationManager()
+        locationManager?.delegate = self
+        //locationManager?.requestAlwaysAuthorization()
+        //locationManager?.requestWhenInUseAuthorization()
+        
         starFilled = false
         starButton.setImage((UIImage(named: "star")), for: .normal)
         mapView.showsCompass = false
@@ -68,7 +85,28 @@ class MapViewController: UIViewController, MKMapViewDelegate{
         
         addAnnotations()
         
+        var data: Root?
+        guard let path = Bundle.main.path(forResource: "Data", ofType: "plist") else { return }
+        guard let contents = try? Data(contentsOf: URL(fileURLWithPath: path)) else { return }
+        let decoder = PropertyListDecoder()
+        data = try? decoder.decode(Root.self, from: contents)
+        if let places = data?.places{
+            self.places = places
+            for place in places{
+                setLocationNotification(place)
+            }
+        }
+        
+       
+        
     }
+    
+    func setLocationNotification(_ place: Places) {
+        let notificationInfo = LocationNotificationInfo(notificationId: "\(String(describing: place.name))_id", locationId: "\(String(describing: place.name))_location_id", radius: 500.0, latitude: place.lat, longitude: place.long, title: "Welcome \(place.name)!", body: "Tap me!", data: ["location": "\(place.name)"])
+       
+        locationNotification.requestNotification(with: notificationInfo)
+    }
+    
     
     func addAnnotations(){
         var data: Root?
@@ -88,6 +126,9 @@ class MapViewController: UIViewController, MKMapViewDelegate{
             }
         }
     }
+    
+    
+    
     
 
     @IBAction func star(_ sender: Any) {
@@ -116,17 +157,6 @@ class MapViewController: UIViewController, MKMapViewDelegate{
                 favArray = DataManager.sharedInstance.getFavorites()
                 DataManager.sharedInstance.removeFromFavorites(currentSelectedAnnotation)
                 favArray = DataManager.sharedInstance.getFavorites()
-                /*favArray = DataManager.sharedInstance.defaults.object(forKey:"favorites") as? [String] ?? [String]()
-                var index = -1
-                for favorite in favArray {
-                    index+=1
-                    if currentSelectedAnnotation == favorite {
-                        break
-                    }
-                    
-                }
-                favArray.remove(at: index)
-                DataManager.sharedInstance.defaults.set(currentSelectedAnnotation, forKey: "favorites")*/
             }
         }
     }
@@ -154,6 +184,10 @@ class MapViewController: UIViewController, MKMapViewDelegate{
         placeName.text = view.annotation!.title!!
         placeDescription.text = (view.annotation?.subtitle)!
         currentSelectedAnnotation = view.annotation!.title!!
+        let coor = view.annotation?.coordinate
+        let span = MKCoordinateSpan(latitudeDelta: 0.1, longitudeDelta: 0.1)
+        let annotationLocation = MKCoordinateRegion(center: coor!, span: span)
+        mapView.setRegion(annotationLocation, animated: true)
         favArray = DataManager.sharedInstance.getFavorites()
         var index = -1
         for favorite in favArray {
@@ -177,7 +211,6 @@ class MapViewController: UIViewController, MKMapViewDelegate{
 
 extension MapViewController: PlacesFavoritesDelegate {
     func favoritePlace(name: String){
-        //destination.delegate = self // IF DOESNT WORK, TRY IN FAVORITES VIEW CONTROLLER
         var data: Root?
         guard let path = Bundle.main.path(forResource: "Data", ofType: "plist") else { return }
         guard let contents = try? Data(contentsOf: URL(fileURLWithPath: path)) else { return }
@@ -186,19 +219,63 @@ extension MapViewController: PlacesFavoritesDelegate {
         if let places = data?.places{
             for place in places{
                 if place.name == name {
+                    let allAnnotations = mapView.annotations
+                    for annotation in allAnnotations{
+                        if place.name == annotation.title!!{
+                            mapView.selectAnnotation(annotation, animated: true)
+                            break
+                        }
+                    }
                     let lat = place.lat
                     let long = place.long
                     let coordinates = CLLocationCoordinate2D(latitude: lat, longitude: long)
-                    let span = MKCoordinateSpan(latitudeDelta: 0.008, longitudeDelta: 0.008)
+                    let span = MKCoordinateSpan(latitudeDelta: 0.03, longitudeDelta: 0.03)
                     let favoriteLocation = MKCoordinateRegion(center: coordinates, span: span)
                     mapView.setRegion(favoriteLocation, animated: true)
-                    mapView.region = favoriteLocation
+                    
+                    placeName.text = place.name
+                    placeDescription.text = place.description
+                    annotationSelected = true
+                    currentSelectedAnnotation = place.name
+                    starFilled = true
+                    starButton.setImage(UIImage(named: "star.fill"), for: .normal)
+                    
                     break
                 }
             }
         }
         
+        
+    }
+    
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if segue.identifier == "toFavorites" {
+            let destination = segue.destination as! FavoritesViewController
+            destination.delegate = self
+        }
     }
 
+}
+
+extension MapViewController: LocationNotificationSchedulerDelegate {
+    
+    
+    func locationPermissionDenied() {
+        
+    }
+    
+    func notificationPermissionDenied() {
+        
+    }
+    
+    func notificationScheduled(error: Error?) {
+        if error != nil {
+            
+        } else {
+            
+        }
+    }
+    
+    
 }
 
